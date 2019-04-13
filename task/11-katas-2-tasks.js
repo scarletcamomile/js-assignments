@@ -34,9 +34,11 @@
  *
  */
 function parseBankAccount(bankAccount) {
-    throw new Error('Not implemented');
+    const zip3 = (aa, bb, cc) => aa.map((a, i) => a + bb[i] + cc[i]);;
+    const DIGITS = ['  | ||_|', '     |  |', '   || ', '   | |', '   |_|  |', '  |  |', '  | |_|', '    |  |', '  |_||_|', '  |_| |'];
+    const rows = bankAccount.split("\n").map(row => row.match(/.../g));
+    return +zip3(...rows).map(sticks => DIGITS.indexOf(sticks)).join ``
 }
-
 
 /**
  * Returns the string, but with line breaks inserted at just the right places to make sure that no line is longer than the specified column number.
@@ -135,12 +137,12 @@ function getPokerHandRank(hand) {
  *    '+-------------+\n'
  */
 function* getFigureRectangles(figure) {
-   throw new Error('Not implemented');
+    throw new Error('Not implemented');
 }
 
 
 module.exports = {
-    parseBankAccount : parseBankAccount,
+    parseBankAccount: parseBankAccount,
     wrapText: wrapText,
     PokerRank: PokerRank,
     getPokerHandRank: getPokerHandRank,
