@@ -44,8 +44,24 @@ function findStringInSnakingPuzzle(puzzle, searchStr) {
  *    'ab'  => 'ab','ba'
  *    'abc' => 'abc','acb','bac','bca','cab','cba'
  */
-function* getPermutations(chars) {
-    throw new Error('Not implemented');
+function getPermutations(string) {
+    //throw new Error('Not implemented');
+    const arr = string.split(""),
+        tmp = arr.slice(),
+        heads = [],
+        out = [];
+    if (string.length == 1) return [string];
+    arr.forEach(function (v) {
+        if (heads.indexOf(v) == -1) {
+            heads.push(v);
+            tmp.splice(tmp.indexOf(v), 1);
+            getPermutations(tmp.join("")).forEach(function (w) {
+                out.push(v + w);
+            });
+            tmp.push(v);
+        }
+    });
+    return out;
 }
 
 
@@ -65,7 +81,17 @@ function* getPermutations(chars) {
  *    [ 1, 6, 5, 10, 8, 7 ] => 18  (buy at 1,6,5 and sell all at 10)
  */
 function getMostProfitFromStockQuotes(quotes) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    if (quotes.length === 0) return 0;
+    const plus = (v, w) => v + w;
+    const maxPrice = Math.max(...quotes);
+    const i = quotes.lastIndexOf(maxPrice);
+    return (
+        quotes
+        .slice(0, i)
+        .map((v) => maxPrice - v)
+        .reduce(plus, 0) + getMostProfitFromStockQuotes(quotes.slice(i + 1))
+    );
 }
 
 
@@ -84,21 +110,37 @@ function getMostProfitFromStockQuotes(quotes) {
  * 
  */
 function UrlShortener() {
-    this.urlAllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"+
-                           "abcdefghijklmnopqrstuvwxyz"+
-                           "0123456789-_.~!*'();:@&=+$,/?#[]";
+    this.urlAllowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+        "abcdefghijklmnopqrstuvwxyz" +
+        "0123456789-_.~!*'();:@&=+$,/?#[]";
 }
 
 UrlShortener.prototype = {
 
-    encode: function(url) {
-        throw new Error('Not implemented');
+    encode: function (url) {
+        //throw new Error('Not implemented');
+        var res = "";
+        for (let i = 0; i * 2 < url.length; i++) {
+            res += String.fromCodePoint(
+                url.codePointAt(2 * i) * 256 + (url.codePointAt(2 * i + 1) || 0)
+            );
+        }
+        return res;
     },
-    
-    decode: function(code) {
-        throw new Error('Not implemented');
-    } 
+
+    decode: function (code) {
+        //throw new Error('Not implemented');
+        var res = "";
+        for (let i = 0; i < code.length; i++) {
+            let c = code.codePointAt(i);
+            res +=
+                String.fromCodePoint((c / 256) | 0) +
+                (c % 256 ? String.fromCodePoint(c % 256) : "");
+        }
+        return res;
+    }
 }
+
 
 
 module.exports = {

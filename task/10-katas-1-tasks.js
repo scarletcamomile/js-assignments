@@ -18,7 +18,7 @@
  */
 function createCompassPoints() {
     throw new Error('Not implemented');
-    var sides = ['N','E','S','W'];  // use array of cardinal directions only!
+    var sides = ['N', 'E', 'S', 'W']; // use array of cardinal directions only!
 }
 
 
@@ -55,8 +55,23 @@ function createCompassPoints() {
  *
  *   'nothing to do' => 'nothing to do'
  */
-function* expandBraces(str) {
-    throw new Error('Not implemented');
+function expandBraces(str) {
+    //throw new Error('Not implemented');
+    const count = (c) => (c == "{" ? 1 : c == "}" ? -1 : 0);
+    const start = str.indexOf("{");
+    let end = start + 1;
+    let ctr = 1;
+
+    if (start < 0) return [str];
+    while (ctr) {
+        ctr += count(str[end++]);
+    }
+    return [...str.slice(start + 1, end - 1)]
+        .map((c) => (!(ctr += count(c)) && c == "," ? ";" : c))
+        .join("")
+        .split(";")
+        .map((s) => str.slice(0, start) + s + str.slice(end))
+        .reduce((all, some) => all.concat(expandBraces(some)), []);
 }
 
 
@@ -88,7 +103,64 @@ function* expandBraces(str) {
  *
  */
 function getZigZagMatrix(n) {
-    throw new Error('Not implemented');
+    // diagonals :: n -> [[n]]
+    function diagonals(n) {
+        let diags = (xs, iCol, iRow) => {
+            if (iCol < xs.length) {
+                let xxs = splitAt(iCol, xs);
+
+                return [xxs[0]].concat(
+                    diags(xxs[1], iCol + (iRow < n ? 1 : -1), iRow + 1)
+                );
+            } else return [xs];
+        };
+
+        return diags(range(0, n * n - 1), 1, 1);
+    }
+
+    // Recursively read off n heads of diagonal lists
+    // rowsFromDiagonals :: n -> [[n]] -> [[n]]
+    function rowsFromDiagonals(n, lst) {
+        if (lst.length) {
+            let [edge, rest] = splitAt(n, lst);
+
+            return [edge.map((x) => x[0])].concat(
+                rowsFromDiagonals(
+                    n,
+                    edge
+                    .filter((x) => x.length > 1)
+                    .map((x) => x.slice(1))
+                    .concat(rest)
+                )
+            );
+        } else return [];
+    }
+
+    // GENERIC FUNCTIONS
+
+    // splitAt :: Int -> [a] -> ([a],[a])
+    function splitAt(n, xs) {
+        return [xs.slice(0, n), xs.slice(n)];
+    }
+
+    // range :: From -> To -> Maybe Step -> [Int]
+    // range :: Int -> Int -> Maybe Int -> [Int]
+    function range(m, n, step) {
+        let d = (step || 1) * (n >= m ? 1 : -1);
+
+        return Array.from({
+                length: Math.floor((n - m) / d) + 1
+            },
+            (_, i) => m + i * d
+        );
+    }
+
+    // ZIG-ZAG MATRIX
+
+    return rowsFromDiagonals(
+        n,
+        diagonals(n).map((x, i) => (i % 2 || x.reverse()) && x)
+    );
 }
 
 
@@ -137,13 +209,19 @@ function canDominoesMakeRow(dominoes) {
  * [ 1, 2, 4, 5]          => '1,2,4,5'
  */
 function extractRanges(nums) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    for (let i = 0; i < nums.length; i++) {
+        let j = i;
+        while (nums[j] - nums[j + 1] == -1) j++;
+        if (j != i && j - i > 1) nums.splice(i, j - i + 1, nums[i] + "-" + nums[j]);
+    }
+    return nums.join();
 }
 
 module.exports = {
-    createCompassPoints : createCompassPoints,
-    expandBraces : expandBraces,
-    getZigZagMatrix : getZigZagMatrix,
-    canDominoesMakeRow : canDominoesMakeRow,
-    extractRanges : extractRanges
+    createCompassPoints: createCompassPoints,
+    expandBraces: expandBraces,
+    getZigZagMatrix: getZigZagMatrix,
+    canDominoesMakeRow: canDominoesMakeRow,
+    extractRanges: extractRanges
 };

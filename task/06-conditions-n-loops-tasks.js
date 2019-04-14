@@ -72,7 +72,10 @@ function getFactorial(n) {
  *   -1,1  =>  0  ( = -1 + 0 + 1 )
  */
 function getSumBetweenNumbers(n1, n2) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    return Array.from({
+        length: (n2 - n1) + 1
+    }, (_, i) => n1 + i).reduce((a, c) => a + c)
 }
 
 
@@ -91,7 +94,8 @@ function getSumBetweenNumbers(n1, n2) {
  *   10,10,10 =>  true
  */
 function isTriangle(a, b, c) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    return a < b + c && b < a + c && c < a + b ? true : false;
 }
 
 

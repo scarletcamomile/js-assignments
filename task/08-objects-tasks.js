@@ -59,6 +59,8 @@ function getJSON(obj) {
  */
 function fromJSON(proto, json) {
     throw new Error('Not implemented');
+    /*const obj = JSON.parse(json);
+    return Object.create(proto, obj);*/
 }
 
 

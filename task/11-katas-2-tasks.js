@@ -33,11 +33,27 @@
  *   '|_||_  _||_| _||_| _||_| _|\n',
  *
  */
-function parseBankAccount(bankAccount) {
-    const zip3 = (aa, bb, cc) => aa.map((a, i) => a + bb[i] + cc[i]);;
-    const DIGITS = ['  | ||_|', '     |  |', '   || ', '   | |', '   |_|  |', '  |  |', '  | |_|', '    |  |', '  |_||_|', '  |_| |'];
-    const rows = bankAccount.split("\n").map(row => row.match(/.../g));
-    return +zip3(...rows).map(sticks => DIGITS.indexOf(sticks)).join ``
+function parseBankAccount(str) {
+    const arr = str.split `\n`;
+    const list = [
+        " _ | ||_|",
+        "     |  |",
+        " _  _||_ ",
+        " _  _| _|",
+        "   |_|  |",
+        " _ |_  _|",
+        " _ |_ |_|",
+        " _   |  |",
+        " _ |_||_|",
+        " _ |_| _|"
+    ];
+    let res = "";
+    const length = arr[0].length;
+    for (let i = 0; i < length; i += 3) {
+        const n = [].concat(...[0, 1, 2].map((j) => arr[j].slice(i, i + 3)));
+        res += list.indexOf(n.join ``);
+    }
+    return +res;
 }
 
 /**
@@ -102,7 +118,56 @@ const PokerRank = {
 }
 
 function getPokerHandRank(hand) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    let cards = "234567891JQKA";
+    let ranks = hand
+        .map((v) => v[0])
+        .sort((a, b) => cards.indexOf(a) - cards.indexOf(b))
+        .join("");
+    let suits = hand.map((v) => v[v.length - 1]).join("");
+    let groupedRanks = ranks.match(/(.)\1{0,99}/g);
+    let groupedSuits = suits.match(/(.)\1{0,99}/g);
+    if (
+        groupedSuits.length == 1 &&
+        (cards.indexOf(ranks) != -1 || ranks == "2345A")
+    ) {
+        return PokerRank.StraightFlush;
+    }
+    if (groupedRanks[0].length == 4 || groupedRanks[1].length == 4) {
+        return PokerRank.FourOfKind;
+    }
+    if (groupedRanks[0].length + groupedRanks[1].length == 5) {
+        return PokerRank.FullHouse;
+    }
+    if (groupedSuits.length == 1) {
+        return PokerRank.Flush;
+    }
+    if (cards.indexOf(ranks) != -1 || ranks == "2345A") {
+        return PokerRank.Straight;
+    }
+    if (
+        groupedRanks[0].length == 3 ||
+        groupedRanks[1].length == 3 ||
+        groupedRanks[2].length == 3
+    ) {
+        return PokerRank.ThreeOfKind;
+    }
+    if (
+        groupedRanks[0].length + groupedRanks[1].length + groupedRanks[2].length ==
+        5
+    ) {
+        return PokerRank.TwoPairs;
+    }
+    if (
+        groupedRanks[0].length +
+        groupedRanks[1].length +
+        groupedRanks[2].length +
+        groupedRanks[3].length ==
+        5
+    ) {
+        return PokerRank.OnePair;
+    }
+    return PokerRank.HighCard;
 }
 
 
@@ -136,8 +201,55 @@ function getPokerHandRank(hand) {
  *    '|             |\n'+              '+-----+\n'           '+-------------+\n'
  *    '+-------------+\n'
  */
-function* getFigureRectangles(figure) {
-    throw new Error('Not implemented');
+function getFigureRectangles(figure) {
+    //throw new Error('Not implemented');
+    let a = figure.split("\n");
+    let answer = [];
+    let check = function bar(n, m) {
+        let i;
+        let j;
+        for (i = m;; i++) {
+            if (a[n - 1][i] == undefined || a[n - 1][i] == " " || a[n] == undefined)
+                return;
+            if (a[n][i] != " ") break;
+        }
+        let w = i;
+        for (j = n;; j++) {
+            if (a[j] == undefined || a[j][w] == " ") return;
+            if (a[j][w - 1] != " ") break;
+        }
+        let h = j;
+        for (i = w - 1;; i--) {
+            if (a[h][i] == undefined || a[h][i] == " " || a[h - 1] == undefined)
+                return;
+            if (a[h - 1][i] != " ") break;
+        }
+        if (i + 1 != m) return;
+        for (j = h - 1;; j--) {
+            if (a[j] == undefined || a[j][m - 1] == " ") return;
+            if (a[j][m] != " ") break;
+        }
+        if (j + 1 != n) return;
+        n = h - n;
+        m = w - m;
+        answer.push(
+            "+" +
+            "-".repeat(m) +
+            "+\n" +
+            ("|" + " ".repeat(m) + "|\n").repeat(n) +
+            "+" +
+            "-".repeat(m) +
+            "+\n"
+        );
+    };
+
+    a.pop();
+    a.forEach((v, i) =>
+        v.split("").forEach((v, j) => {
+            if (v == "+") check(i + 1, j + 1);
+        })
+    );
+    return answer;
 }
 
 

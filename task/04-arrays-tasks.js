@@ -281,6 +281,7 @@ function getSecondItems(arr) {
  */
 function propagateItemsByPositionIndex(arr) {
     throw new Error('Not implemented');
+    //return arr.reduce((acc, el, index) => [...acc, ...el.repeat(index)], []);
 }
 
 
@@ -431,7 +432,14 @@ function toStringList(arr) {
  *      { country: 'Russia',  city: 'Saint Petersburg' }
  */
 function sortCitiesArray(arr) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    return arr.sort((a, b) => {
+        if (a.country == b.country) {
+            return (a.city < b.city) ? -1 : (a.city > b.city) ? 1 : 0;
+        } else {
+            return (a.country < b.country) ? -1 : 1;
+        }
+    })
 }
 
 /**
@@ -561,9 +569,9 @@ function selectMany(arr, childrenSelector) {
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
 function getElementByIndexes(arr, indexes) {
-    //throw new Error('Not implemented');
-    const trueIndex = indexes.reduce((acc, el) => acc[el], []);
-    console.log(trueIndex);
+    throw new Error('Not implemented');
+    /*const trueIndex = indexes.reduce((acc, el) => acc[el], []);
+    console.log(trueIndex);*/
 }
 
 
@@ -586,7 +594,10 @@ function getElementByIndexes(arr, indexes) {
  * 
  */
 function swapHeadAndTail(arr) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    if (arr.length === 1) return arr;
+    if (arr.length === 2) return arr.reverse();
+    return arr.length % 2 === 0 ? [...arr.slice(arr.length / 2), ...arr.slice(0, arr.length / 2)] : [...arr.slice(Math.ceil(arr.length / 2)), arr[Math.floor(arr.length / 2)], ...arr.slice(0, Math.floor(arr.length / 2))]
 }
 
 
