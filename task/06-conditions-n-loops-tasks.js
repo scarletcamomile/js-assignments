@@ -132,7 +132,8 @@ function isTriangle(a, b, c) {
  *  
  */
 function doRectanglesOverlap(rect1, rect2) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    return rect1.height >= rect2.top && rect1.width >= rect2.left ? true : false
 }
 
 
@@ -163,7 +164,9 @@ function doRectanglesOverlap(rect1, rect2) {
  *   
  */
 function isInsideCircle(circle, point) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    const centerToPointDist = Math.sqrt(Math.pow(circle.center.x - point.x, 2) + Math.pow(circle.center.y - point.y, 2));
+    return centerToPointDist >= circle.radius ? false : true;
 }
 
 
@@ -277,7 +280,14 @@ function reverseInteger(num) {
  *   4916123456789012 => false
  */
 function isCreditCardNumber(ccn) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    const value = String(ccn);
+    return value.split('')
+        .reverse()
+        .map((x) => parseInt(x))
+        .map((x, idx) => idx % 2 ? x * 2 : x)
+        .map((x) => x > 9 ? (x % 10) + 1 : x)
+        .reduce((accum, x) => accum += x) % 10 === 0;
 }
 
 
@@ -324,13 +334,32 @@ function getDigitalRoot(n) {
  *   '{[(<{[]}>)]}' = true 
  */
 function isBracketsBalanced(str) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    /*if (str.length <= 1)
+        return false*/
+    let matchingOpeningBracket, ch;
+    const stack = [];
+    const openingBrackets = ['[', '{', '(', '<'];
+    const closingBrackets = [']', '}', ')', '>'];
+
+    for (let i = 0; i < str.length; i++) {
+        ch = str[i];
+        if (closingBrackets.indexOf(ch) > -1) {
+            matchingOpeningBracket = openingBrackets[closingBrackets.indexOf(ch)]
+            if (stack.length == 0 || (stack.pop() != matchingOpeningBracket)) {
+                return false
+            }
+        } else {
+            stack.push(ch)
+        }
+    }
+    return (stack.length == 0)
 }
 
 
 /**
  * Returns the human readable string of time period specified by the start and end time.
- * The result string should be constrcuted using the folliwing rules:
+ * The result string should be constructed using the following rules:
  *
  * ---------------------------------------------------------------------
  *   Difference                 |  Result
@@ -402,7 +431,18 @@ function toNaryString(num, n) {
  *   ['/web/favicon.ico', '/web-scripts/dump', '/webalizer/logs'] => '/'
  */
 function getCommonDirectoryPath(pathes) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    pathes.sort();
+    let lastDirDelimiter = -1;
+    for (let lastEqual = 0; lastEqual < pathes[0].length; lastEqual++) {
+        if (pathes[0][lastEqual] != pathes[pathes.length - 1][lastEqual]) {
+            break;
+        }
+        if (pathes[0][lastEqual] == '/') {
+            lastDirDelimiter = lastEqual;
+        }
+    }
+    return lastDirDelimiter == -1 ? '' : pathes[0].slice(0, lastDirDelimiter + 1);
 }
 
 
@@ -424,8 +464,14 @@ function getCommonDirectoryPath(pathes) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(m1, m2) {
-    throw new Error('Not implemented');
+function getMatrixProduct(A, B) {
+    //throw new Error('Not implemented');
+    const result = new Array(A.length).fill(0).map(row => new Array(B[0].length).fill(0));
+    return result.map((row, i) => {
+        return row.map((val, j) => {
+            return A[i].reduce((sum, elm, k) => sum + (elm * B[k][j]), 0)
+        })
+    })
 }
 
 
