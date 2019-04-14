@@ -179,7 +179,14 @@ function isInsideCircle(circle, point) {
  *   'entente' => null
  */
 function findFirstSingleChar(str) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    for (let i = 0; i < str.length; i++) {
+        const c = str.charAt(i);
+        if (str.indexOf(c) == i && str.indexOf(c, i + 1) == -1) {
+            return c;
+        }
+    }
+    return null;
 }
 
 
@@ -205,7 +212,11 @@ function findFirstSingleChar(str) {
  *
  */
 function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    const open = isStartIncluded ? '[' : '(';
+    const close = isEndIncluded ? ']' : ')';
+    if (a > b) return `${open}${b}, ${a}${close}`;
+    return `${open}${a}, ${b}${close}`;
 }
 
 
@@ -240,7 +251,8 @@ function reverseString(str) {
  *   34143 => 34143
  */
 function reverseInteger(num) {
-    throw new Error('Not implemented');
+    //throw new Error('Not implemented');
+    return +String(num).split('').reverse().join('');
 }
 
 
@@ -283,8 +295,10 @@ function isCreditCardNumber(ccn) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(num) {
-    throw new Error('Not implemented');
+function getDigitalRoot(n) {
+    //throw new Error('Not implemented');
+    const arrFn = () => n.toString().split('').map(el => parseInt(el)).reduce((a, c) => a + c);
+    return arrFn() > 9 ? getDigitalRoot(arrFn()) : arrFn()
 }
 
 
